@@ -1,6 +1,8 @@
 # Summary
 
 * [Introduction](README.md)
+* [javascript](js/README.md)
+    * [1. js获取某年某月的天数](js/problem/p1.md)
 * [Node.js](node/README.md)
     * [1. 使用koa-body中间件后ctx.request.body内容为空](node/problem/p1.md)
     * [2. uni-app使用Node+Koa2接收上传的文件](node/problem/p2.md)
@@ -13,4 +15,5 @@
     * 创建型模式
     * [单例模式](createor/singleton.md)
     * [工厂模式](creator/factory.md)
+    * [抽象工厂模式](creator/abstract-factory.md)
 
