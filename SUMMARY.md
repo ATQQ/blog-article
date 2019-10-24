@@ -23,4 +23,6 @@
 * [Spring boot学习笔记](springboot/README.md)
 * [IDEA](idea/README.md)
     * [1. 设置maven项目的默认配置](idea/problem/p1.md)
+* [Linux](linux/README.md)
+    * [1.常用命令](linux/command/part1.md)
 

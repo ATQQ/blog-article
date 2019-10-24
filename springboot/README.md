@@ -920,3 +920,223 @@ public class UserController {
 }
 ```
 ### 其它mapper
+
+```java
+public interface UserMapper {
+
+    /**
+     * 新增用户
+     * @param user 新用户数据
+     * @return  新增用户id
+     */
+    @Insert("insert into user(username,sex,phone,create_date) values(#{username},#{sex},#{tel},#{createData})")
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
+    int insert(User user);
+
+
+    /**
+     *  查询所有的用户信息
+     * @return 用户列表
+     */
+    @Select("select * from user")
+    @Results({
+            @Result(column = "create_date",property = "createData"),
+            @Result(column = "phone",property = "tel"),
+            @Result(column = "id",property = "id")
+    })
+    List<User> getAll();
+
+
+    /**
+     * 通过id删除User
+     * @param userId 用户id
+     */
+    @Delete("delete from user where id = #{userId}")
+    void delete(Integer userId);
+
+    /**
+     * 通过id更新用户名字段
+     * @param user 新数据
+     */
+    @Update("update user set username=#{username} where id =#{id}")
+    void update(User user);
+}
+```
+
+# 事务
+
+## 事务出错回滚
+```java
+@PostMapping("testEvent")
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Object testEvent(){
+        User test=new User("admin",12,"M","15196520474",new Date());
+        res.clear();
+        res.put("code",200);
+        res.put("data",userService.addUser(test));
+        int i=1/0;
+        return res;
+    }
+```
+
+# Redis
+
+## 相关链接
+>[在线命令测试](https://try.redis.io/)<br>
+>[redis官网](https://redis.io/)<br>
+>[菜鸟教程](https://www.runoob.com/redis/redis-tutorial.html)
+### linux下
+```
+下载
+wget http://download.redis.io/releases/redis-5.0.5.tar.gz
+
+解压
+tar xzf redis-5.0.5.tar.gz
+
+编译源码
+cd redis-5.0.5
+make
+
+启动服务
+./src/redis-server
+
+连接服务
+./src/redis-cli
+
+测试
+set test hello-world
+get test
+```
+
+# 整合redis
+## 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+## 简单使用
+```java
+public class testRedisController {
+
+    private HashMap<String,Object> res=new HashMap<>();
+
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @PostMapping("set")
+    public Object set(String key,String value){
+        res.clear();
+        res.put("key",key);
+        res.put("value",value);
+        stringRedisTemplate.opsForValue().set(key,value);
+        return res;
+    }
+
+    @GetMapping("get")
+    public Object get(String key){
+        res.clear();
+        res.put("key",key);
+        res.put("value",stringRedisTemplate.opsForValue().get(key));
+        return res;
+    }
+}
+
+```
+
+## Redis桌面应用
+* 链接:[https://redisdesktop.com/](https://redisdesktop.com/)
+
+## 封装工具类
+* redis操作工具类
+* json与 Object相互转换
+* jsonData回调模板
+
+# 定时任务与异步任务处理
+## 定时任务
+### 启动类增加新注解
+```java
+@EnableScheduling
+```
+
+### 使用 (testTimerTask.class)
+```java
+@Component
+public class TestTimerTask {
+    //每隔5s执行一次
+    @Scheduled(fixedRate = 1000*5)
+    // 每隔2s执行一次
+    // @Scheduled(cron = "*/2 * * * * *")
+    // @Scheduled(fixedDelay=3000)
+    public void test1(){
+        System.out.println(new Date());
+    }
+}
+```
+* @fixedRate 多久执行一次
+* @fixedDelay 在上一次执行结束之后再隔 多久执行一次
+* @fixedDelayString 采用字符串作为参数
+
+## 异步任务
+### 启动类添加注解
+```java
+@EnableAsync //开启异步任务
+```
+### 异步任务类
+
+```java
+@Component
+public class AsyncTask {
+
+    @Async
+    public void task1() throws InterruptedException {
+        long begin = System.currentTimeMillis();
+        Thread.sleep(3000L);
+        System.out.println(System
+                .currentTimeMillis() - begin);
+    }
+}
+
+```
+### 业务调用
+
+```java
+@RequestMapping("asnyc")
+@RestController
+public class testAsyncController {
+
+    @Autowired
+    private AsyncTask AsyncTask;
+
+    @GetMapping("task1")
+    public String testAsyncTask() throws InterruptedException {
+        AsyncTask.task1();
+        return "success";
+    }
+}
+```
+
+### 等待异步回调完成
+```java
+    // 异步函数
+    @Async
+    public Future<String> task2() throws InterruptedException {
+        long begin = System.currentTimeMillis();
+        Thread.sleep(5000L);
+        System.out.println(System
+                .currentTimeMillis() - begin);
+        return new AsyncResult<String>("任务2完成结束");
+    }
+
+    // 等待回调完成
+    Future<String> task2 = AsyncTask.task2();
+    while (true){
+        if(task2.isDone()){
+            break;
+        }
+    }
+```
