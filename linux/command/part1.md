@@ -21,6 +21,9 @@
 
 ---
 
+### 查看目标文件绝对路径 readlink
+* readlink -f targetFilename
+
 ### 查看小文件内容 cat
 * 查看小文件:<code>cat</code> 123.txt
 

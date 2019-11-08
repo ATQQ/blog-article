@@ -1,6 +1,9 @@
 # Summary
 
 * [Introduction](README.md)
+* [CSS动画笔记](animation/README.md)
+    * [1.transition 属性](animation/transition/README.md)
+    * [2.transition 实例](animation/transition/demo.md)
 * [javascript](js/README.md)
     * [1. js获取某年某月的天数](js/problem/p1.md)
 * [Node.js](node/README.md)
