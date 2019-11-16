@@ -6,6 +6,8 @@
     * [2.transition 实例](animation/transition/demo.md)
 * [javascript](js/README.md)
     * [1. js获取某年某月的天数](js/problem/p1.md)
+* [npm](npm/README.md)
+    * [1. 入门篇](npm/start/README.md)
 * [Node.js](node/README.md)
     * [1. 使用koa-body中间件后ctx.request.body内容为空](node/problem/p1.md)
     * [2. uni-app使用Node+Koa2接收上传的文件](node/problem/p2.md)
@@ -29,4 +31,5 @@
     * [1. 设置maven项目的默认配置](idea/problem/p1.md)
 * [Linux](linux/README.md)
     * [1.常用命令](linux/command/part1.md)
+* [嵌入式系统给结构及原理](armCortexA8/README.md)
 
