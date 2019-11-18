@@ -104,3 +104,83 @@ bird =animalFactory.getAnimal("bird");
 dog.run();
 bird.run();
 ```
+---
+
+## demo2
+
+```js
+//手机抽象工厂
+class MobilePhoneFactory {
+    // 提供操作系统接口
+    createOs() {
+        throw new Error('抽象工厂方法不允许直接调用，你需要将我重写!')
+    }
+
+    // 提供硬件接口
+    createHardWare() {
+        throw new Error('抽象工厂方法不允许直接调用，你需要将我重写!')
+    }
+}
+
+// 操作系统
+class OS {
+    controlHardWare() {
+        throw new Error('抽象工厂方法不允许直接调用，你需要将我重写!')
+    }
+}
+
+
+class AndroidOS extends OS {
+    controlHardWare() {
+        console.log('我会用安卓的方式去操作硬件')
+    }
+}
+
+class AppleOS extends OS {
+    controlHardWare() {
+        console.log('我会用苹果的方式去操作硬件')
+    }
+}
+
+// 硬件产品
+class HardWare {
+    operateByOrder() {
+        throw new Error('抽象工厂方法不允许直接调用，你需要将我重写!')
+    }
+}
+
+class QualcommHardWare extends HardWare {
+    operateByOrder() {
+        console.log("我会用高通的方式去运转");
+    }
+}
+
+class MiHardWare extends HardWare {
+    operateByOrder() {
+        console.log('我会用小米的方式去运转');
+    }
+}
+
+// 山寨安卓手机
+class FakeAndroidPhone extends MobilePhoneFactory {
+    createHardWare() {
+        return new MiHardWare();
+    }
+
+    createOs() {
+        return new AndroidOS();
+    }
+}
+
+const myPhone = new FakeAndroidPhone();
+//拥有操作系统
+const myOs = myPhone.createOs();
+//拥有硬件
+const myHandWare = myPhone.createHardWare();
+
+// 启动操作系统
+myOs.controlHardWare();
+
+// 启动硬件
+myHandWare.operateByOrder();
+```
