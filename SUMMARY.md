@@ -17,6 +17,7 @@
     * [2. 插入](sql/insert/README.md)
     * [3. 修改](sql/update/README.md)
     * [4. 删除](sql/delete/README.md)
+    * [5. 期末复习](sql/homework.md)
 * [Git](git/README.md)
     * [1. git add命令后出现another git process...问题](git/problem/p1.md)
 * [vue-cli](vue-cli/README.md)
