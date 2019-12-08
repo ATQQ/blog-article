@@ -22,6 +22,8 @@
     * [1. git add命令后出现another git process...问题](git/problem/p1.md)
 * [vue-cli](vue-cli/README.md)
     * [1. vue-cli(脚手架)引入vue.config.js文件后热更新失效,每次保存都会刷新页面](vue-cli/problem/p1.md)
+* [uni-app](uni-app/README.md)
+    * [1. uni-app中不使用scroll-view组件,监听页面滑直底部事件](uni-app/problem/p1.md)
 * [设计模式](design/README.md)
     * 创建型模式
     * [单例模式](design/creator/singleton.md)

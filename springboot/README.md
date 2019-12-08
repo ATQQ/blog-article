@@ -450,7 +450,8 @@ spring.devtools.restart.exclude=application.properties
 ```
 * 通过触发器,控制什么时候进行热更新
 ```properties
-spring.devtools.restart.trigger-file=.reloadtrigger
+spring.devtools.restart.trigger-file=.reloadtrigger拦截器
+
 ```
 
 ## spring配置文件
