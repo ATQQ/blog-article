@@ -51,5 +51,11 @@
     * [1. 设置maven项目的默认配置](idea/problem/p1.md)
 * [Linux](linux/README.md)
     * [1.常用命令](linux/command/part1.md)
+    * [2.常用基础命令2](linux/command/part2.md)
+    * [3.linux目录介绍](linux/command/directory.md)
+    * [4. vi编辑器使用](linux/command/vi.md)
+    * [5.用户管理](linux/command/user-group.md)
+    * [6. 文件属性与权限操作](linux/command/attr-power.md)
+    * [7. 文件归档与解压缩](linux/command/compressed.md)
 * [嵌入式系统给结构及原理](armCortexA8/README.md)
 
