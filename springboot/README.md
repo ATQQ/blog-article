@@ -378,6 +378,12 @@ html
 ```
 
 ## 硬编码方式修改文件上传大小限制
+```properties
+# 上传文件大小限制
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+```
+
 springProApplication文件(带有@SpringBootApplication注解)中添加
 ```java
 	@Bean

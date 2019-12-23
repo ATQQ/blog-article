@@ -78,6 +78,8 @@ SELECT * FROM employee WHERE fname LIKE 'J%'
 SELECT * FROM employee WHERE fname LIKE '%a%'
 
 SELECT * FROM employee WHERE fname LIKE '__i%'
+-- 正则表达式查询匹配
+select * from tablename where colname regexp '正则表达式'
 ```
 
 ## 查询null数据
