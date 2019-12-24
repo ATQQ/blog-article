@@ -119,7 +119,9 @@ transition: background 0.5s linear;
 * 效果
 
 ![深度录屏_选择区域_20191108085505-201911885546](http://img.cdn.sugarat.top/深度录屏_选择区域_20191108085505-201911885546.gif)
+
 * html
+  
 ```html
 <body>
     <button id="show">Show it</button>
@@ -129,7 +131,9 @@ transition: background 0.5s linear;
     </div>
 </body>
 ```
+
 * css
+  
 ```css
 body {
   background-color: #134;
@@ -161,7 +165,6 @@ button:hover{
   color: #099;
 }
 
-
 #wait-show{
   color: #fff;
   text-align: center;
@@ -181,7 +184,9 @@ button:hover{
   top: calc(50% + 6em);
 }
 ```
+
 * js
+  
 ```js
  let showBtn = document.getElementById('show');
     let body = document.body;
