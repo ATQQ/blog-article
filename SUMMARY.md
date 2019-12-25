@@ -62,5 +62,7 @@
     * [1. shell 变量与常见符号](shell/content/1.md)
     * [2. shell中的四则运算符](shell/content/2.md)
     * [3. 条件判断](shell/content/3.md)
+    * [4. 输入输出](shell/content/4.md)
+    * [5. 输出彩色的内容](shell/content/5.md)
 * [嵌入式系统给结构及原理](armCortexA8/README.md)
 
