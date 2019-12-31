@@ -100,34 +100,28 @@ public class LoginServlet extends HttpServlet {
 
 * jsp
 ```jsp
-<form name="regForm" action="/hello_servlet/LoginServlet" method="post">
-    <table>
-        <%
-            <!-- 数据获取 -->
-           Cookie[]cookies =request.getCookies();
-           String username="";
-           String password="";
-           for (Cookie k:cookies){
-               if(k.getName().equals("username")){
-                   username=k.getValue();
-               }
-               if(k.getName().equals("password")){
-                   password=k.getValue();
-               }
+<%
+        <!-- 数据获取 -->
+    Cookie[]cookies =request.getCookies();
+    String username="";
+    String password="";
+       for (Cookie k:cookies){
+           if(k.getName().equals("username")){
+               username=k.getValue();
            }
-        %>
-        <tr>
-            <td>用户名：</td>
-            <td><input type="text" name="username" value="<%=username%>"></td>
-        </tr>
-        <tr>
-            <td>密码：</td>
-            <td><input type="password" name="password" value="<%=password%>"></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" value="提交"></td>
-        </tr>
-    </table>
+           if(k.getName().equals("password"){
+               password=k.getValue();
+           }
+       }
+%>
+
+<form name="regForm" action="/hello_servlet/LoginServlet" method="post">
+        
+            用户名：
+            <input type="text" name="username" value="<%=username%>" />
+            密码：
+            <input type="password" name="password" value="<%=password%>"/>
+            <input type="submit" value="提交">
 </form>
 ```
 

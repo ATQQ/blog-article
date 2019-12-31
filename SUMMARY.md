@@ -6,6 +6,7 @@
     * [2.transition 实例](animation/transition/demo.md)
 * [css 笔记](css/README.md)
     * [1. box-shadow 阴影](css/problem/box-shadow.md)
+    * [2. columns 设置列宽和列数](css/problem/columns.md)
 * [webpack4](webpack/README.md)
     * [1. 文档学习记录](webpack/problem/config.md)
     * [2. 加载CSS](webpack/problem/css.md)
@@ -69,4 +70,5 @@
 * [嵌入式系统给结构及原理](armCortexA8/README.md)
 * [学校期末复习](examination/README.md)
     * [1. java EE 复习](examination/course/javaEE.md)
+    * [2. 马原复习](examination/course/marx.md)
 
