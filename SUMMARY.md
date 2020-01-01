@@ -67,8 +67,11 @@
     * [3. 条件判断](shell/content/3.md)
     * [4. 输入输出](shell/content/4.md)
     * [5. 输出彩色的内容](shell/content/5.md)
+    * [6. 流程控制](shell/content/6.md)
 * [嵌入式系统给结构及原理](armCortexA8/README.md)
 * [学校期末复习](examination/README.md)
     * [1. java EE 复习](examination/course/javaEE.md)
     * [2. 马原复习](examination/course/marx.md)
+    * [3. 嵌入式软件技术复习](examination/course/qrssoft.md)
+    * [4. 嵌入式操作系统复习](examination/course/qrsOS.md)
 
