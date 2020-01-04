@@ -67,7 +67,7 @@ gcc main.c -lmy -o main
 带有--static使用静态库
 ```bash
 # 连接到 libmy.a
-gcc main.c --static lmy -o main
+gcc main.c -static -lmy -o main
 ```
 
 ### 指定库目录
