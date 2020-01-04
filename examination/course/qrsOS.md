@@ -41,7 +41,7 @@
 
 * 体系结构是操作系统的基础，它定义了硬件与软件的界限、内核与操作系统其它组件（文件、网络、GUI等）的组织关系、系统与应用的接口。
 * 体系结构是确保系统的性能、可靠性、灵活性、可移植性、可扩展性的关键，就好比房子的梁架，只有梁架搭牢固了才提得上房子的质量，再做一些锦上添花的工作才有意义。
-* 目前操作系统的体系结构可分为：单块结构、层次结构和客户/服务器（微内核）结构。
+* 目前操作系统的体系结构可分为：**单块结构、层次结构和客户/服务器（微内核）结构。**
 
 目前嵌入式操作系统主要采用分层和模块化相结合的结构或微内核结构。
 * 分层和模块化结合的结构将操作系统分为硬件无关层、硬件抽象层和硬件相关层，每层再划分功能模块。
@@ -92,7 +92,7 @@
 * 运行态(running)：已经获取CPU使用权并运行的任务
 * 等待态(waiting)：暂时让出CPU使用权，等待某一事件触发（信号量、事件标志，信号队列）
 * 中断服务态(ISR):正在执行的任务被中断任务打断，UCOS执行中断任务
-
+![](https://images2017.cnblogs.com/blog/1006496/201708/1006496-20170808130858105-975235765.png)
 >什么是系统空闲任务。
 
 * 当没有其他任务准备好运行时执行该命令。
@@ -100,9 +100,7 @@
 * 空闲任务永远不能被应用程序软件删除。
 * 空闲任务由操作系统创建。
 
->一段代码反应出嵌入式操作系统的什么特征
-
->进去临界区,离开临界区函数
+>~~一段代码反应出嵌入式操作系统的什么特征~~
 
 >任务扩展？
 
@@ -122,7 +120,8 @@
 ![图片](http://img.cdn.sugarat.top/mdImg/MTU3ODA2Mjk4ODI0Nw==578062988247)
 
 ![图片](http://img.cdn.sugarat.top/mdImg/MTU3ODA2MzAwNTczMw==578063005733)
-总结:单等待队列需要扫描整个等待队列才能确立等待该资源的任务等待队列,而多等待队列能够在较短时间里确立.
+
+总结:单等待队列需要扫描整个等待队列,搜索等待该资源的任务，并按照一定的策略选取任务，把任务的任务控制块放置到就绪队列。才能确立等待该资源的任务等待队列,而多等待队列能够在较短时间里确立.
 
 
 >任务切换的时机/步骤
@@ -173,8 +172,126 @@
 
 >[优先级位图算法](https://blog.csdn.net/qq_41337581/article/details/103811432)(必考)：~~写出映射表的定义~~
 
+>进去临界区,离开临界区函数
+
+```cpp
+#include "windows.h"
+
+CRITICAL_SECTION  _critical
+
+/*初始化，最先调用的函数。没什么好说的，一般windows编程都有类似初始化的方法*/
+InitializeCriticalSection(& _critical) 
+
+/*释放资源，确定不使用_critical时调用，一般在程序退出的时候调用。如果以后还要用_critical，则要重新调用InitializeCriticalSection
+*/
+DeleteCriticalSection(& _critical) 
+
+/*
+把代码保护起来。调用此函数后，他以后的资源其他线程就不能访问了。
+*/
+EnterCriticalSection（& _critical）
+
+/*
+离开临界区，表示其他线程能够进来了。注意EnterCritical和LeaveCrticalSection必须是成对出现的!当然除非你是想故意死锁！
+*/
+LeaveCriticalSection(& _critical)
+```
+
 >优先级反转代码(编程必考)
 
+```cpp
+/**
+* 创建并启动所有任务
+*/
+void TaskStartCreateTasks(void)
+{
+    INT8U i;
+
+    for (i = 0; i < N_TASKS; i++) // Create N_TASKS identical tasks
+    {
+        TaskData[i] = i;
+    }
+    // Each task will pass its own id
+    OSTaskCreate(Task0, (void *)&TaskData[0], &TaskStk[0][TASK_STK_SIZE - 1], 5);
+    OSTaskCreate(Task1, (void *)&TaskData[1], &TaskStk[1][TASK_STK_SIZE - 1], 6);
+    OSTaskCreate(Task2, (void *)&TaskData[2], &TaskStk[2][TASK_STK_SIZE - 1], 7);
+}
+
+/**
+* 任务 TA0 
+*/
+void Task0(void *pdata)
+{
+    INT8U err;
+    INT8U id;
+
+    id = *(int *)pdata;
+    for (;;)
+    {
+
+        printf("Task_%d waitting for an EVENT\n\r", id);
+        OSTimeDly(200); /* Delay 200 clock tick */
+        printf("Task_%d's EVENT CAME!\n\r", id);
+        printf("Task_%d trying to GET MUTEX\n\r", id);
+        OSSemPend(mutex, 0, &err); /* Acquire mutex */
+        switch (err)
+        {
+        case OS_NO_ERR:
+            printf("Task_%d GOT mutex.\n\r", id);
+            break;
+        default:
+            printf("Task_%d CANNOT get mutex, then SUSPENDED.\n\r", id);
+        }
+        OSTimeDly(200); /* Delay 200 clock tick */
+        printf("Task_%d RELEASE mutex\n\r", id);
+        OSSemPost(mutex); /* Release mutex */
+    }
+}
+
+/**
+* TASK1
+*/
+void Task1(void *pdata)
+{
+    INT8U id;
+    id = *(int *)pdata;
+    for (;;)
+    {
+        printf("Task_%d waitting for an EVEBT\n\r", id);
+        OSTimeDly(100); /* Delay 100 clock tick */
+        printf("Task_%d's EVENT CAME!\n\r", id);
+        OSTimeDly(100);
+    }
+}
+
+/*
+* Task2
+*/
+void Task2(void *pdata)
+{
+    INT8U err;
+    INT8U id;
+    id = *(int *)pdata;
+    for (;;)
+    {
+        printf("Task_%d trying to GET MUTEX\n\r", id);
+        OSSemPend(mutex, 0, &err); /* Acquire mutex */
+        switch (err)
+        {
+        case OS_NO_ERR:
+            printf("Task_%d GOT mutex.\n\r", id);
+            OSTimeDly(200); /* Delay 100 clock tick */
+            break;
+        default:
+            printf("Task_%d CANNOT get mutex, then SUSPENDED.\n\r", id);
+            OSTimeDly(200); /* Delay 100 clock tick */
+            break;
+        }
+        printf("Task_%d RELEASE mutex\n\r", id);
+        OSSemPost(mutex); /* Release mutex */
+    }
+}
+```
 pdf31页实验指导书
 
 >系统调用实现原理，串惨
@@ -186,6 +303,7 @@ pdf31页实验指导书
 
 >信号与共享内存代码
 
+### 信号
 ```cpp
 #include <signal.h>
 #include <stdio.h>
@@ -203,7 +321,93 @@ int main(){
     return 0;
 }
 ```
-共享内存p158
+
+### 示例
+server.c
+```cpp
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+#include<fcntl.h>
+#include<sys/types.h>
+#include<sys/ipc.h>
+#include<sys/shm.h>
+#include<errno.h>
+#define SHMSZ 27
+
+int main(){
+    char c;
+    int shmid;
+    key_t key;
+    char *shm,*s;
+
+    key=5678;
+    shmid=shmget(key,SHMSZ,0666|IPC_CREAT);
+    if(shmid<0){
+        printf("shm create error");
+        exit(1);
+    }
+    shm=(char *)shmat(shmid,NULL,0);
+    if(shm==(char *)-1){
+        printf("shm at error");
+        exit(1);
+    }
+    s=shm;
+    for(c='a';c<'z';c++){
+        *s++=c;
+    }
+    *s=NULL;
+    while(*shm !='*'){
+        sleep(1);
+    }
+    shmdt(shm);
+    exit(0);
+    return 0;
+}
+```
+
+user.c
+```cpp
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+#include<fcntl.h>
+#include<sys/types.h>
+#include<sys/ipc.h>
+#include<sys/shm.h>
+#include<errno.h>
+#define SHMSZ 27
+
+int main(){
+    char c;
+    int shmid;
+    key_t key;
+    char *shm,*s;
+
+    key=5678;
+    shmid=shmget(key,SHMSZ,0666|IPC_CREAT);
+    if(shmid<0){
+        printf("shm create error");
+        exit(1);
+    }
+    shm=(char *)shmat(shmid,NULL,0);
+    if(shm==(char *)-1){
+        printf("shm at error");
+        exit(1);
+    }
+    for(s=shm;*s!=NULL;s++){
+        putchar(*s);
+    }
+        putchar('\n');
+    *s='*';
+    shmdt(shm);
+    exit(0);
+    return 0;
+}
+
+```
 
 ## shell编程题
 >1.数组排序
