@@ -75,8 +75,9 @@
 * [嵌入式系统给结构及原理](armCortexA8/README.md)
 * [学校期末复习](examination/README.md)
     * [1. java EE 复习](examination/course/javaEE.md)
-    * [2. 马原复习](examination/course/marx.md)
+    * [2. 马原复习论述题](examination/course/marx.md)
     * [3. 嵌入式软件技术复习](examination/course/qrssoft.md)
     * [4. 嵌入式操作系统复习](examination/course/qrsOS.md)
     * [5. 马原选择题](examination/course/marx-choose.md)
+    * [6. 马原辨析题](examination/course/marx-analyze.md)
 
