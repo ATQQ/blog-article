@@ -78,4 +78,5 @@
     * [2. 马原复习](examination/course/marx.md)
     * [3. 嵌入式软件技术复习](examination/course/qrssoft.md)
     * [4. 嵌入式操作系统复习](examination/course/qrsOS.md)
+    * [5. 马原选择题](examination/course/marx-choose.md)
 
