@@ -80,4 +80,5 @@
     * [4. 嵌入式操作系统复习](examination/course/qrsOS.md)
     * [5. 马原选择题](examination/course/marx-choose.md)
     * [6. 马原辨析题](examination/course/marx-analyze.md)
+    * [7. 马原材料题](examination/course/marx-material.md)
 
