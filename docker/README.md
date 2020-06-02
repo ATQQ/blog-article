@@ -33,6 +33,7 @@
 * docker cp /root/test.txt imageName:/home/ :拷贝本地文件/root/test.txt到容器中的/home/目录下
 * docker cp imageName:/home/test.txt /root :拷贝容器中的文件到宿主机上
 * docker run -itd -v 要挂载目录:容器中的目录 imageName:tag:挂载指定目录到指定容器中
+* docker commit -a "author" -m "description" containerId myImageName:Tag :基于现有的镜像创建自己的镜像
 ### 配置阿里云加速器加速镜像下载(可以去阿里云控制台寻找专属的)
 ```text
 mkdir -p /etc/docker
@@ -44,3 +45,135 @@ EOF
 systemctl daemon-reload
 systemctl restart docker
 ```
+
+
+## Dockerfile
+使用Dockerfile构建镜像
+
+dockerfile
+```dockerfile
+# this is a dockerfile
+FROM centos:7 # 基于centos:7镜像构建
+MAINTAINER sugar engineerzjl@foxmail.com #作者信息
+RUN echo "start build image" # 运行命令
+WORKDIR /home/sugar #工作目录
+COPY test.txt /home/sugar # 复制文件
+RUN yum install -y net-tools # 运行安装命令
+```
+开始构建末尾的一点代表当目录
+```shell
+docker build -t mycentos:2 .
+```
+### 常用指令
+```dockerfile
+FROM    #基于哪个镜像
+MAINTAINER 作者信息
+COPY    #复制文件(单纯的复制,不做其他操作)
+ADD     #复制文件如果是 .tar.gz 还会解压
+WORKDIR #工作目录
+ENV     #设置环境变量
+EXPOSE  #暴露容器端口
+RUN     #执行命令  作用于镜像层面
+
+# 有多条时 在容器启动时执行最后一条
+ENTRYPOINT  #执行后面的命令 作用于容器层面
+CMD     #指定后面的命令 作用于容器层面 (会被传参覆盖)
+  docker run imageName:tag params
+```
+命令格式
+* shell:RUn echo "hello world
+* exec:RUN ["yum","install","-y","net-tools"]
+
+## 镜像分层结构
+查看镜像的构建历史
+```shell
+docker history imageName:tag
+```
+镜像只读,容器可读可写
+
+## 构建java环境
+```
+解压
+tar -xf jdkxxxx
+移动 jdk /usr/local
+mv jdk /usr/local/jdk
+配置环境变量
+vi /etc/profile
+加入已下内容在末尾
+export JAVA_HOME=/usr/local/jdk
+export JRE_HOME=$JAVA_HOME/jre
+export CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+
+生效环境变量
+source /etc/profile
+检验
+java -version
+
+拷贝tomcat到指定目录中然后在bin目录中找到startup.sh启动
+需要关闭防火墙才能访问(也可放行端口)
+```
+dockerfile构建
+```dockerfile
+FROM centos:7
+ADD jdk-8u211-linux-x64.tar.gz /usr/local
+RUN mv /usr/local/jdk1.8.0_211 /usr/local/jdk8
+ENV JAVA_HOME=/usr/local/jdk8
+ENV JRE_HOME=$JAVA_HOME/jre
+ENV CLASSPATH=$JAVA_HOME/lib:$JRE_HOME/lib:$CLASSPATH
+ENV PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+ADD apache-tomcat-8.5.35.tar.gz /usr/local
+RUN mv /usr/local/apache-tomcat-8.5.35 /usr/local/tomcat
+EXPOSE 8080
+ENTRYPOINT ["/usr/local/tomcat/bin/catalina.sh","run"]
+```
+启动
+```shell
+docker run -itd -p 8081:8080 -v /root/tomcatWebapps:/usr/local/tomcat/webapps/ROOT centos:java /bin/bash
+```
+
+# 构建nginx镜像
+dicjerfile
+```dockerfile
+FROM centos:7
+ADD nginx-1.16.0.tar.gz /usr/local
+COPY nginx_install.sh /usr/local
+RUN sh /usr/local/nginx_install.sh
+EXPOSE 80
+```
+shell
+```sh
+#!/bin/bash
+yum install -y gcc gcc-c++ make pcre pcre-devel zlib zlib-devel
+cd /usr/local/nginx-1.16.0
+./configure --prefix=/usr/local/nginx && make && make install
+```
+运行
+```sh
+docker run -itd -p 8081:80 mycentos:nginx /usr/local/nginx/sbin/nginx -g "daemon off;"
+```
+经测试可以后台启动容器后 进入容器再打开nginx
+```
+docker exec -it containerId /bin/bash
+cd /usr/local/nginx/sbin
+./nginx
+```
+
+## mysql镜像
+拉取
+```sh
+docker pull mysql:5.7
+```
+后台运行
+```sh
+docker run --name test-mysql -p 3307:3306 -e MYSQL_ROOT_PASSWORD=a123456 -d mysql:5.7
+```
+进入容器(并设置字符编码)
+```sh
+docker exec -it test-mysql env LANG=C.UTF-8 /bin/bash
+```
+
+## 网络
+* bridge  桥接
+* host    主机
+* none    
